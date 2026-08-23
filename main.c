@@ -4,11 +4,15 @@
 typedef struct task {
     char nome[100];
     char programa[100];
-    char *argumentos[50];
+    char argumentos[50][100];
+    int qtdArgumentos;
 } task;
 
+task tarefas[100];
+int qtdTarefas = 0;
+
 void receberComando(char *comando) {
-    
+
     char *parte = strtok(comando, " ");
 
     if (parte == NULL) {
@@ -32,22 +36,19 @@ void receberComando(char *comando) {
             printf("Nome do programa nao informado!\n");
             return;
         }
+
         strcpy(tarefa.programa, parte);
-
+        tarefa.qtdArgumentos = 0;
         parte = strtok(NULL, " ");
-        int i = 0;
-
-        tarefa.argumentos[i] = tarefa.programa;
-        i++;
 
         while(parte != NULL) {
-            tarefa.argumentos[i] = parte;
-            i++;
-
+            strcpy(tarefa.argumentos[tarefa.qtdArgumentos], parte);
+            tarefa.qtdArgumentos++;
             parte = strtok(NULL, " ");
         }
-        tarefa.argumentos[i] = NULL;
-
+        tarefas[qtdTarefas] = tarefa;
+        qtdTarefas++;
+        printf("Tarefa %s cadastrada!\n", tarefa.nome);
         printf("Nome: %s\n", tarefa.nome);
         printf("Programa: %s\n", tarefa.programa);
         for (int j = 0; tarefa.argumentos[j] != NULL; j++) {
