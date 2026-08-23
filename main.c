@@ -110,7 +110,15 @@ void receberComando(char *comando) {
             _exit(1);
         } else {
             printf("Processo pai!\n");
-            waitpid(pid, NULL, 0);
+            int status;
+            waitpid(pid, &status, 0);
+
+            if (WIFEXITED(status)) {
+                int codigo = WEXITSTATUS(status);
+                if (codigo != 0) {
+                    printf("Processo terminou com código %d\n", codigo);
+                }
+            }
         }
     }
 }
