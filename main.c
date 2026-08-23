@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 typedef struct task {
     char nome[100];
@@ -12,7 +15,7 @@ task tarefas[100];
 int qtdTarefas = 0;
 
 int buscarTarefa(char *nome) {
-    
+
     for (int i = 0; i < qtdTarefas; i++) {
         if (strcmp(tarefas[i].nome, nome) == 0) {
             return i;
@@ -58,12 +61,15 @@ void receberComando(char *comando) {
         }
         tarefas[qtdTarefas] = tarefa;
         qtdTarefas++;
+
         printf("Tarefa %s cadastrada!\n", tarefa.nome);
         printf("Nome: %s\n", tarefa.nome);
         printf("Programa: %s\n", tarefa.programa);
+
         for (int j = 0; j < tarefa.qtdArgumentos; j++) {
             printf("argumentos[%d]: %s\n", j, tarefa.argumentos[j]);
         }
+
     } else if (strcmp(parte, "run") == 0){
         parte = strtok(NULL, " ");
 
@@ -80,6 +86,32 @@ void receberComando(char *comando) {
         }
 
         printf("Tarefa encontrada: %s\n", tarefas[posicao].nome);
+        pid_t pid = fork();
+
+        if (pid < 0) {
+            printf("Erro ao criar processo!\n");
+            return;
+        }
+
+        if (pid == 0) {
+            char *args[52];
+
+            args[0] = tarefas[posicao].programa;
+
+            for (int i = 0; i < tarefas[posicao].qtdArgumentos; i++) {
+                args[i + 1] = tarefas[posicao].argumentos[i];
+            }
+
+            args[tarefas[posicao].qtdArgumentos + 1] = NULL;
+
+            execvp(tarefas[posicao].programa, args);
+
+            printf("Erro ao executar programa!\n");
+            _exit(1);
+        } else {
+            printf("Processo pai!\n");
+            waitpid(pid, NULL, 0);
+        }
     }
 }
 
