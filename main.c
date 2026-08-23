@@ -11,6 +11,16 @@ typedef struct task {
 task tarefas[100];
 int qtdTarefas = 0;
 
+int buscarTarefa(char *nome) {
+    
+    for (int i = 0; i < qtdTarefas; i++) {
+        if (strcmp(tarefas[i].nome, nome) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void receberComando(char *comando) {
 
     char *parte = strtok(comando, " ");
@@ -51,9 +61,25 @@ void receberComando(char *comando) {
         printf("Tarefa %s cadastrada!\n", tarefa.nome);
         printf("Nome: %s\n", tarefa.nome);
         printf("Programa: %s\n", tarefa.programa);
-        for (int j = 0; tarefa.argumentos[j] != NULL; j++) {
+        for (int j = 0; j < tarefa.qtdArgumentos; j++) {
             printf("argumentos[%d]: %s\n", j, tarefa.argumentos[j]);
         }
+    } else if (strcmp(parte, "run") == 0){
+        parte = strtok(NULL, " ");
+
+        if (parte == NULL) {
+            printf("Nome da tarefa não informado!\n");
+            return;
+        }
+
+        int posicao = buscarTarefa(parte);
+
+        if (posicao == -1) {
+            printf("Tarefa não encontrada!\n");
+            return;
+        }
+
+        printf("Tarefa encontrada: %s\n", tarefas[posicao].nome);
     }
 }
 
