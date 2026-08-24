@@ -3,12 +3,17 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
 typedef struct task {
     char nome[100];
     char programa[100];
     char argumentos[50][100];
     int qtdArgumentos;
+    char arquivoSaida[100];
+    int tipoSaida;
+    char arquivoEntrada[100];
+    int temEntrada;
 } task;
 
 task tarefas[100];
@@ -38,6 +43,8 @@ void receberComando(char *comando) {
         parte = strtok(NULL, " ");
 
         task tarefa;
+        tarefa.tipoSaida = 0;
+        tarefa.temEntrada = 0;
         if (parte == NULL) {
             printf("Nome da tarefa não informado!\n");
             return;
@@ -221,6 +228,31 @@ void receberComando(char *comando) {
                 }
 
                 args[tarefas[posicao].qtdArgumentos + 1] = NULL;
+                if (tarefas[posicao].tipoSaida != 0) {
+                    int fd;
+                    if (tarefas[posicao].tipoSaida == 1) {
+                        fd = open(tarefas[posicao].arquivoSaida, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                    } else {
+                        fd = open(tarefas[posicao].arquivoSaida, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                    }
+
+                    if (fd < 0) {
+                        fprintf(stderr, "Erro ao abrir arquivo de saida!\n");
+                        _exit(1);
+                    }
+                    dup2(fd, STDOUT_FILENO);
+                    close(fd);
+                }
+
+                if (tarefas[posicao].temEntrada == 1) {
+                    int fdEntrada = open(tarefas[posicao].arquivoEntrada, O_RDONLY);
+                    if (fdEntrada < 0) {
+                        fprintf(stderr, "Erro ao abrir arquivo de entrada!\n");
+                        _exit(1);
+                    }
+                    dup2(fdEntrada, STDIN_FILENO);
+                    close(fdEntrada);
+                }
 
                 execvp(tarefas[posicao].programa, args);
 
@@ -239,6 +271,71 @@ void receberComando(char *comando) {
                 }
             }
         }
+    } else if (strcmp(parte, "output") == 0) {
+        parte = strtok(NULL, " ");
+        if (parte == NULL) {
+            printf("Nome da tarefa nao informado!\n");
+            return;
+        }
+        int posicao = buscarTarefa(parte);
+
+        if (posicao == -1) {
+            printf("Tarefa nao encontrada!\n");
+            return;
+        }
+        parte = strtok(NULL, " ");
+
+        if (parte == NULL) {
+            printf("Arquivo de saida nao informado!\n");
+            return;
+        }
+
+        strcpy(tarefas[posicao].arquivoSaida, parte);
+        tarefas[posicao].tipoSaida = 1;
+        printf("Saída da tarefa %s redirecionada para %s\n", tarefas[posicao].nome, tarefas[posicao].arquivoSaida);
+
+    } else if (strcmp(parte, "append") == 0) {
+        parte = strtok(NULL, " ");
+        if (parte == NULL) {
+            printf("Nome da tarefa não informado!\n");
+            return;
+        }
+        int posicao = buscarTarefa(parte);
+
+        if (posicao == -1) {
+            printf("Tarefa não encontrada!\n");
+            return;
+        }
+        parte = strtok(NULL, " ");
+
+        if (parte == NULL) {
+            printf("Arquivo de saída não informado!\n");
+            return;
+        }
+        strcpy(tarefas[posicao].arquivoSaida, parte);
+        tarefas[posicao].tipoSaida = 2;
+        printf("Saida da tarefa %s sera adicionada ao arquivo %s\n", tarefas[posicao].nome, tarefas[posicao].arquivoSaida);
+    } else if (strcmp(parte, "input") == 0) {
+        parte = strtok(NULL, " ");
+        if (parte == NULL) {
+            printf("Nome da tarefa nao informado!\n");
+            return;
+        }
+        int posicao = buscarTarefa(parte);
+
+        if (posicao == -1) {
+            printf("Tarefa nao encontrada!\n");
+            return;
+        }
+        parte = strtok(NULL, " ");
+
+        if (parte == NULL) {
+            printf("Arquivo de entrada nao informado!\n");
+            return;
+        }
+        strcpy(tarefas[posicao].arquivoEntrada, parte);
+        tarefas[posicao].temEntrada = 1;
+        printf("Entrada da tarefa %s redirecionada para %s\n", tarefas[posicao].nome, tarefas[posicao].arquivoEntrada);
     }
 }
 
