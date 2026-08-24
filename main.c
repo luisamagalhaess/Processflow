@@ -142,6 +142,58 @@ void receberComando(char *comando) {
                 }
                 parte = strtok(NULL, " ");
             }
+        } else if(strcmp(parte, "parallel") == 0) {
+            printf("Modo paralelo!\n");
+            pid_t pids[100];
+            int qtdPids = 0;
+
+            parte = strtok(NULL, " ");
+
+            if (parte == NULL) {
+                printf("Nenhuma tarefa informada!\n");
+                return;
+            }
+
+            while (parte != NULL) {
+                int posicao = buscarTarefa(parte);
+                if (posicao == -1) {
+                    printf("Tarefa %s não encontrada!\n", parte);
+                } else {
+                    printf("Executando tarefa: %s\n", tarefas[posicao].nome);
+                    fflush(stdout);
+                    pid_t pid = fork();
+
+                    if (pid < 0) {
+                        printf("Erro ao criar processo!\n");
+                    } else if (pid == 0) {
+                        char *args[52];
+                        args[0] = tarefas[posicao].programa;
+
+                        for (int i = 0; i < tarefas[posicao].qtdArgumentos; i++) {
+                            args[i + 1] = tarefas[posicao].argumentos[i];
+                        }
+                        args[tarefas[posicao].qtdArgumentos + 1] = NULL;
+                        execvp(tarefas[posicao].programa, args);
+
+                        fprintf(stderr, "Erro ao executar programa!\n");
+                        _exit(1);
+                    } else {
+                        pids[qtdPids] = pid;
+                        qtdPids++;
+                    }
+                }
+                parte = strtok(NULL, " ");
+            }
+            for (int i = 0; i < qtdPids; i++) {
+                int status;
+                waitpid(pids[i], &status, 0);
+                if (WIFEXITED(status)) {
+                    int codigo = WEXITSTATUS(status);
+                    if (codigo != 0) {
+                        printf("Processo terminou com código %d\n", codigo);
+                    }
+                }
+            }            
         } else {
 
             int posicao = buscarTarefa(parte);
