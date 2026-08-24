@@ -162,4 +162,149 @@ See 'snap info task' for additional versions.
 [?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processflow
 [?2004lprocessflow> task mostrar /bin/cat
 Comando task!
+Tarefa mostrar cadastrada!k' not found, but can be installed with:
+sudo snap install task         # version v3.51.1, or
+sudo apt  install taskwarrior  # version 2.6.2+dfsg-1
+See 'snap info task' for additional versions.
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clean
+[?2004lrm -f processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make
+[?2004lgcc main.c -o processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processflow
+[?2004lprocessflow> task mostrar /bin/cat
+Comando task!
 Tarefa mostrar cadastrada!
+Nome: mostrar
+Programa: /bin/cat
+processflow> input mostrar entrada.txt
+Entrada da tarefa mostrar redirecionada para entrada.txt
+processflow> run mostrar
+Tarefa encontrada: mostrar
+Processo pai!
+Ola ProcessFlow
+processflow> exit
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clena
+[?2004lmake: *** No rule to make target 'clena'.  Stop.
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clena[K[Kan
+[?2004lrm -f processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make
+[?2004lgcc main.c -o processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processfloe[Kw
+[?2004lprocessflow> task t1 /bin/echo primeiro
+Comando task!
+Tarefa t1 cadastrada!
+Nome: t1
+Programa: /bin/echo
+argumentos[0]: primeiro
+processflow> task t2 /bin/echo segundo
+Comando task!
+Tarefa t2 cadastrada!
+Nome: t2
+Programa: /bin/echo
+argumentos[0]: segundo
+processflow> run sequential t1 t2
+Modo sequencial!
+Executando tarefa: t1
+primeiro
+Executando tarefa: t2
+segundo
+processflow> exit
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clean
+[?2004lrm -f processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make
+[?2004lgcc main.c -o processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processflow
+[?2004lprocessflow> task gerar /usr/bin/printf banana\nabacaxi\nmaca\n
+Comando task!
+Tarefa gerar cadastrada!
+Nome: gerar
+Programa: /usr/bin/printf
+argumentos[0]: banana\nabacaxi\nmaca\n
+processflow> task ordenar /usr/bin/sort
+Comando task!
+Tarefa ordenar cadastrada!
+Nome: ordenar
+Programa: /usr/bin/sort
+processflow> task copiar /bin/cat
+Comando task!
+Tarefa copiar cadastrada!
+Nome: copiar
+Programa: /bin/cat
+processflow> run pipe gerar ordenar copiar
+Tarefa não encontrada!
+processflow> exit
+[?2004h]0;luisa@LAPTO
+Nome: mostrar
+Programa: /bin/cat
+processflow> input mostrar entrada.txt
+Entrada da tarefa mostrar redirecionada para entrada.txt
+processflow> run mostrar
+Tarefa encontrada: mostrar
+Processo pai!
+Ola ProcessFlow
+processflow> exit
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clena
+[?2004lmake: *** No rule to make target 'clena'.  Stop.
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clena[K[Kan
+[?2004lrm -f processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make
+[?2004lgcc main.c -o processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processfloe[Kw
+[?2004lprocessflow> task t1 /bin/echo primeiro
+Comando task!
+Tarefa t1 cadastrada!
+Nome: t1
+Programa: /bin/echo
+argumentos[0]: primeiro
+processflow> task t2 /bin/echo segundo
+Comando task!
+Tarefa t2 cadastrada!
+Nome: t2
+Programa: /bin/echo
+argumentos[0]: segundo
+processflow> run sequential t1 t2
+Modo sequencial!
+Executando tarefa: t1
+primeiro
+Executando tarefa: t2
+segundo
+processflow> exit
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clean
+[?2004lrm -f processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make
+[?2004lgcc main.c -o processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processflow
+[?2004lprocessflow> task gerar /usr/bin/printf banana\nabacaxi\nmaca\n
+Comando task!
+Tarefa gerar cadastrada!
+Nome: gerar
+Programa: /usr/bin/printf
+argumentos[0]: banana\nabacaxi\nmaca\n
+processflow> task ordenar /usr/bin/sort
+Comando task!
+Tarefa ordenar cadastrada!
+Nome: ordenar
+Programa: /usr/bin/sort
+processflow> task copiar /bin/cat
+Comando task!
+Tarefa copiar cadastrada!
+Nome: copiar
+Programa: /bin/cat
+processflow> run pipe gerar ordenar copiar
+Tarefa não encontrada!
+processflow> exit
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make clean
+[?2004lrm -f processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ make
+[?2004lgcc main.c -o processflow
+[?2004h]0;luisa@LAPTOP-Q39GM9AS: /mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[01;32mluisa@LAPTOP-Q39GM9AS[00m:[01;34m/mnt/c/Users/luisa/OneDrive/Área de Trabalho/Processflow/Processflow[00m$ ./processflow
+[?2004lprocessflow> task escrever /bin/echo linha-um
+Comando task!
+Tarefa escrever cadastrada!
+Nome: escrever
+Programa: /bin/echo
+argumentos[0]: linha-um
+processflow> output escrever saida.txt
+Saída da tarefa escrever redirecionada para saida.txt
+processflow> run escrever
+Tarefa encontrada: esc
