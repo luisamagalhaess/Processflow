@@ -55,9 +55,18 @@ void receberComando(char *comando) {
         parte = strtok(NULL, " ");
 
         while(parte != NULL) {
+            if (tarefa.qtdArgumentos >= 50) {
+                printf("Quantidade maxima de argumentos excedida!\n");
+                return;
+            }
             strcpy(tarefa.argumentos[tarefa.qtdArgumentos], parte);
             tarefa.qtdArgumentos++;
             parte = strtok(NULL, " ");
+        }
+
+        if (qtdTarefas >= 100) {
+            printf("Limite maximo de tarefas atingido!\n");
+            return;
         }
         tarefas[qtdTarefas] = tarefa;
         qtdTarefas++;
@@ -78,45 +87,103 @@ void receberComando(char *comando) {
             return;
         }
 
-        int posicao = buscarTarefa(parte);
+        if (strcmp(parte, "sequential") == 0) {
+            printf("Modo sequencial!\n");
+            parte = strtok(NULL, " ");
 
-        if (posicao == -1) {
-            printf("Tarefa não encontrada!\n");
-            return;
-        }
-
-        printf("Tarefa encontrada: %s\n", tarefas[posicao].nome);
-        pid_t pid = fork();
-
-        if (pid < 0) {
-            printf("Erro ao criar processo!\n");
-            return;
-        }
-
-        if (pid == 0) {
-            char *args[52];
-
-            args[0] = tarefas[posicao].programa;
-
-            for (int i = 0; i < tarefas[posicao].qtdArgumentos; i++) {
-                args[i + 1] = tarefas[posicao].argumentos[i];
+            if (parte == NULL) {
+                printf("Nenhuma tarefa informada!\n");
+                return;
             }
 
-            args[tarefas[posicao].qtdArgumentos + 1] = NULL;
+            while (parte != NULL) {
+                int posicao = buscarTarefa(parte);
 
-            execvp(tarefas[posicao].programa, args);
+                if (posicao == -1) {
+                    printf("Tarefa %s não encontrada!\n", parte);
 
-            printf("Erro ao executar programa!\n");
-            _exit(1);
+                } else {
+                    printf("Executando tarefa: %s\n", tarefas[posicao].nome);
+                    fflush(stdout);
+
+                    pid_t pid = fork();
+
+                    if (pid < 0) {
+                        printf("Erro ao criar processo!\n");
+                        parte = strtok(NULL, " ");
+                        continue;
+                    }
+
+                    if (pid == 0) {
+                        char *args[52];
+                        args[0] = tarefas[posicao].programa;
+
+                        for (int i = 0; i < tarefas[posicao].qtdArgumentos; i++) {
+                            args[i + 1] = tarefas[posicao].argumentos[i];
+                        }
+
+                        args[tarefas[posicao].qtdArgumentos + 1] = NULL;
+                        execvp(tarefas[posicao].programa, args);
+
+                        fprintf(stderr, "Erro ao executar programa!\n");
+                        _exit(1);
+
+                    } else {
+                        int status;
+                        waitpid(pid, &status, 0);
+
+                        if (WIFEXITED(status)) {
+                            int codigo = WEXITSTATUS(status);
+                            if (codigo != 0) {
+                                printf("Processo terminou com código %d\n", codigo);
+                            }
+                        }
+                    }
+                }
+                parte = strtok(NULL, " ");
+            }
         } else {
-            printf("Processo pai!\n");
-            int status;
-            waitpid(pid, &status, 0);
 
-            if (WIFEXITED(status)) {
-                int codigo = WEXITSTATUS(status);
-                if (codigo != 0) {
-                    printf("Processo terminou com código %d\n", codigo);
+            int posicao = buscarTarefa(parte);
+
+            if (posicao == -1) {
+                printf("Tarefa não encontrada!\n");
+                return;
+            }
+
+            printf("Tarefa encontrada: %s\n", tarefas[posicao].nome);
+            pid_t pid = fork();
+
+            if (pid < 0) {
+                printf("Erro ao criar processo!\n");
+                return;
+            }
+
+            if (pid == 0) {
+                char *args[52];
+
+                args[0] = tarefas[posicao].programa;
+
+                for (int i = 0; i < tarefas[posicao].qtdArgumentos; i++) {
+                    args[i + 1] = tarefas[posicao].argumentos[i];
+                }
+
+                args[tarefas[posicao].qtdArgumentos + 1] = NULL;
+
+                execvp(tarefas[posicao].programa, args);
+
+                fprintf(stderr, "Erro ao executar programa!\n");
+                _exit(1);
+            } else {
+                printf("Processo pai!\n");
+                int status;
+                waitpid(pid, &status, 0);
+
+                if (WIFEXITED(status)) {
+                    int codigo = WEXITSTATUS(status);
+                    if (codigo != 0) {
+                        printf("Processo terminou com código %d\n", codigo);
+                    }
                 }
             }
         }
